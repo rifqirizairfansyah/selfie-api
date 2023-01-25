@@ -23,9 +23,10 @@ npm run start
 
 ## Author
 
+👤 **Rifqi Riza Irfansyah <rizairfansyahrifqi@gmail.com>**
 👤 **Mohamad Radisha <pr0ph0z23@gmail.com>**
 
-* Github: [@pr0ph0z](https://github.com/pr0ph0z)
+* Github: [@pr0ph0z](https://github.com/rifqirizairfansyah)
 
 ## 🤝 Contributing
 
