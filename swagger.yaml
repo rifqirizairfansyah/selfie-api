@@ -1,0 +1,2797 @@
+openapi: 3.0.3
+info:
+  title: Absensi Selfie API
+  version: 2.0.0
+  contact:
+    name: Mohamad Radisha
+    email: pr0ph0z23@gmail.com
+servers:
+  - url: https://absensiselfie-api.pptik.id:5026
+    description: Pre-production/staging server
+  - url: https://pptik-local.pptik.id:5026
+    description: Private development server
+  - url: https://raspi.pptik.id:5026
+    description: Private development server
+  - url: http://api.absensi-selfie.pptik.id:5006
+    description: Production server, this is used in API version less than 2.0.0
+tags:
+  - name: Users
+    description: Tags that defines collection of users endpoints
+  - name: Reports
+    description: Tags that defines collection of user report endpoints
+  - name: Version
+    description: Tags that defines collection of version endpoints
+  - name: Units
+    description: Tags that defines collection of unit authentication endpoints
+  - name: Areas
+    description: Tags that defines collection of unit areas endpoints
+  - name: Companies
+    description: Tags that defines collection of companies endpoints
+  - name: Admin Authentication
+    description: Tags that defines collection of admin
+  - name: Admin Properties
+    description: Tags that defines collection of admin properties endpoints
+  - name: Admin Report
+    description: Tags that defines collection of admin report endpoints
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        status:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Success
+    UnauthorizedResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 401
+        status:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: E-mail or password does not match, or you are not authorized to accessing this page.
+    UnprocessableEntityResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 422
+        status:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: The request you sent is unable to process
+    UserLoginResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                NAME:
+                  type: string
+                  example: Jajang
+                EMAIL:
+                  type: string
+                  example: jajang@gmail.com
+                POSITION:
+                  type: string
+                  example: Siswa
+                COMPANY:
+                  type: string
+                  format: uuid
+                  example: 913f27f7-9e2b-4fef-b72d-1db9dfcec856
+                LOCAL_IMAGE:
+                  type: string
+                  example: /usr/share/913f27f7-9e2b-4fef-b72d-1db9dfcec856.jpg
+                GUID:
+                  type: string
+                  format: uuid
+                  example: 913f27f7-9e2b-4fef-b72d-1db9dfcec856
+                IMAGE:
+                  type: string
+                  example: /data/kehadiran/913f27f7-9e2b-4fef-b72d-1db9dfcec856.jpg
+                UNIT:
+                  type: string
+                  example: 12 RPL A 2019/2020
+    UserProfileUpdateResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                COMPANY:
+                  type: string
+                UNIT:
+                  type: string
+    PersonReportResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  NAME:
+                    type: string
+                  LONG:
+                    type: number
+                  LAT:
+                    type: number
+                  ADDRESS:
+                    type: string
+                  LOCAL_IMAGE:
+                    type: string
+                  TIMESTAMP:
+                    type: integer
+                  IMAGE:
+                    type: string
+                  DESCRIPTION:
+                    type: string
+    VersionResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                VERSION:
+                  type: string
+    AdminLoginResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                token:
+                  type: string
+                role:
+                  type: string
+    ListAreaResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  DISTRICTS:
+                    type: array
+                    items:
+                      type: string
+                  AREA:
+                    type: string
+    ListCompaniesResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  COMPANY_NAME:
+                    type: string
+                  COMPANY_GUID:
+                    type: string
+    ListUnitsResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: string
+    GetCompanyByGuidResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                COMPANY_UNITS:
+                  type: array
+                  items:
+                    type: object
+                COMPANY_NAME:
+                  type: string
+                COMPANY_CODE:
+                  type: string
+                COMPANY_TYPE:
+                  type: string
+                COMPANY_AREA:
+                  type: string
+                COMPANY_DISTRICT:
+                  type: string
+    DetailedReportsResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                reports:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      NAME:
+                        type: string
+                      LONG:
+                        type: number
+                      LAT:
+                        type: number
+                      ADDRESS:
+                        type: string
+                      STATUS:
+                        type: string
+                      TIMESTAMP:
+                        type: integer
+                      IMAGE:
+                        type: string
+                      COMPANY:
+                        type: string
+                      AREA:
+                        type: string
+                      DISTRICT:
+                        type: string
+                      TYPE:
+                        type: string
+                number_of_pages:
+                  type: integer
+    MinifiedReportsResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  LONG:
+                    type: number
+                  LAT:
+                    type: number
+    TotalAttendanceResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                day:
+                  type: integer
+                week:
+                  type: integer
+                month:
+                  type: integer
+                year:
+                  type: integer
+    ListReportsResponse:
+      oneOf:
+        - $ref: "#/components/schemas/DetailedReportsResponse"
+        - $ref: "#/components/schemas/MinifiedReportsResponse"
+        - $ref: "#/components/schemas/TotalAttendanceResponse"
+    ExportReportResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                filename:
+                  type: string
+    ReportByIdResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                _id:
+                  type: string
+                NAME:
+                  type: string
+                LONG:
+                  type: number
+                LAT:
+                  type: number
+                ADDRESS:
+                  type: string
+                TIMESTAMP:
+                  type: string
+                IMAGE:
+                  type: string
+    CompanyUnitsResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: string
+    ReportTypesResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  NAME:
+                    type: string
+                  CODE:
+                    type: string
+    TaskResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                _id:
+                  type: string
+                id:
+                  type: string
+                GUID:
+                  type: string
+                USER_GUID:
+                  type: string
+                TITLE:
+                  type: string
+                DESCRIPTION:
+                  type: string
+                GENERATED_AT:
+                  type: string
+                  format: date-time
+                DUE_AT:
+                  type: string
+                  format: date-time
+                USER:
+                  type: object
+                  properties:
+                    NAME:
+                      type: string
+                    GUID:
+                      type: string
+    TasksResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  id:
+                    type: string
+                  GUID:
+                    type: string
+                  USER_GUID:
+                    type: string
+                  TITLE:
+                    type: string
+                  DESCRIPTION:
+                    type: string
+                  GENERATED_AT:
+                    type: string
+                    format: date-time
+                  DUE_AT:
+                    type: string
+                    format: date-time
+                  USER:
+                    type: object
+                    properties:
+                      NAME:
+                        type: string
+                      GUID:
+                        type: string
+    UsersResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  GUID:
+                    type: string
+                  NAME:
+                    type: string
+    ExportedReportResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                exported_report:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      COMPANY_GUID:
+                        type: string
+                      UNIT:
+                        type: string
+                      DATE_START:
+                        type: string
+                        format: date-time
+                      DATE_END:
+                        type: string
+                        format: date-time
+                      FILENAME:
+                        type: string
+                number_of_pages:
+                  type: integer
+    ProfileInformationResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                TITLE:
+                  type: string
+                LOCATION:
+                  type: object
+                  properties:
+                    LONGITUDE:
+                      type: number
+                    LATITUDE:
+                      type: number
+                    ZOOM:
+                      type: number
+                NAME:
+                  type: object
+                  properties:
+                    AREA:
+                      type: string
+                    DISTRICT:
+                      type: string
+                    COMPANY:
+                      type: string
+                    UNIT:
+                      type: string
+                PRESENCE_HOUR:
+                  type: string
+                LEAVE_HOUR:
+                  type: string
+    MapBoundariesResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                MAP_BOUNDARIES:
+                  type: string
+                COMPANY_GUID:
+                  type: string
+                BOUNDARIES_GUID:
+                  type: object
+                  properties:
+                    lat:
+                      type: string
+                    lng:
+                      type: string
+    UserListResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                users:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/UserList"
+                number_of_pages:
+                  type: number
+    UserResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              $ref: "#/components/schemas/UserList"
+    CompanyProfileResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                COMPANY_GUID:
+                  type: string
+                DESCRIPTION:
+                  type: string
+                IMAGE:
+                  type: string
+                NAME:
+                  type: string
+    AnnouncementResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                _id:
+                  type: string
+                GUID:
+                  type: string
+                COMPANY_GUID:
+                  type: string
+                TITLE:
+                  type: string
+                DESCRIPTION:
+                  type: string
+                ROLE:
+                  type: string
+                  format: string
+                CREATED_AT:
+                  type: string
+                  format: date-time
+    AnnouncementsResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  GUID:
+                    type: string
+                  COMPANY_GUID:
+                    type: string
+                  TITLE:
+                    type: string
+                  DESCRIPTION:
+                    type: string
+                  ROLE:
+                    type: string
+                    format: string
+                  CREATED_AT:
+                    type: string
+                    format: date-time
+
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    UserRegister:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+          format: password
+        position:
+          type: string
+        id_card:
+          type: string
+        company:
+          type: string
+          description: Company code
+        local_image:
+          type: string
+        unit:
+          type: string
+        phone_number:
+          type: string
+        image:
+          type: string
+          format: binary
+        identity_card_image:
+          type: string
+          format: binary
+        family_card_image:
+          type: string
+          format: binary
+        user_location_address:
+          type: string
+        user_location_long:
+          type: number
+        user_location_lat:
+          type: number
+        user_property_location_long:
+          type: number
+        user_property_location_lat:
+          type: number
+        role:
+          type: string
+    UserProfileUpdate:
+      type: object
+      required:
+        - guid
+      properties:
+        guid:
+          type: string
+        company:
+          type: string
+        unit:
+          type: string
+    UserPasswordChange:
+      type: object
+      properties:
+        email:
+          type: string
+        current_password:
+          type: string
+        new_password:
+          type: string
+        new_password_confirmation:
+          type: string
+    ReportCreate:
+      type: object
+      properties:
+        company:
+          type: string
+        guid:
+          type: string
+        name:
+          type: string
+        long:
+          type: string
+        lat:
+          type: string
+        address:
+          type: string
+        local_image:
+          type: string
+        status:
+          type: string
+        position:
+          type: string
+        unit:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+          format: binary
+        report_type:
+          type: string
+    AdminLogin:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    AdminRegistration:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+        type:
+          type: string
+        company_name:
+          type: string
+        company_area:
+          type: string
+        company_district:
+          type: string
+        units:
+          type: array
+          items:
+            type: object
+            properties:
+              NAME:
+                type: string
+              IS_ACTIVE:
+                type: boolean
+    AdminProfileUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 8
+          maxLength: 50
+        location:
+          type: object
+          properties:
+            longitude:
+              type: number
+              minimum: -180
+              maximum: 180
+            latitude:
+              type: number
+              minimum: -90
+              maximum: 90
+            zoom:
+              type: number
+        name:
+          type: object
+          properties:
+            area:
+              type: string
+              maxLength: 50
+              pattern: '^\s*\w+(?:[^\w,]+\w+)*[^,\w]*$'
+            district:
+              type: string
+              maxLength: 50
+              pattern: '^\s*\w+(?:[^\w,]+\w+)*[^,\w]*$'
+            company:
+              type: string
+              maxLength: 50
+              pattern: '^\s*\w+(?:[^\w,]+\w+)*[^,\w]*$'
+            unit:
+              type: string
+              maxLength: 50
+              pattern: '^\s*\w+(?:[^\w,]+\w+)*[^,\w]*$'
+        presence_hour:
+          type: string
+          pattern: "^([0-1][0-9]|[2][0-3]):([0-5][0-9])$"
+        leave_hour:
+          type: string
+          pattern: "^([0-1][0-9]|[2][0-3]):([0-5][0-9])$"
+    UserUnits:
+      type: array
+      items:
+        type: object
+        properties:
+          COMPANY_GUID:
+            type: string
+          NAME:
+            type: string
+          COMPANY_CODE:
+            type: string
+          IS_ACTIVE:
+            type: boolean
+    UserResetPassword:
+      type: object
+      properties:
+        email:
+          type: string
+    BindGoogleAccount:
+      type: object
+      properties:
+        email:
+          type: string
+        token:
+          type: string
+    GoogleSignIn:
+      type: object
+      properties:
+        token:
+          type: string
+    AddTask:
+      type: object
+      properties:
+        user_guid:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        generated_at:
+          type: string
+          format: date-time
+        due_at:
+          type: string
+          format: date-time
+    AddReportType:
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        app_type:
+          type: string
+    MapBoundaries:
+      type: object
+      properties:
+        map_boundaries:
+          type: array
+          items:
+            type: object
+            properties:
+              lat:
+                type: string
+              lng:
+                type: string
+    CreateCompany:
+      type: object
+      properties:
+        company_name:
+          type: string
+        app_type:
+          type: string
+        company_area:
+          type: string
+        company_district:
+          type: string
+        units:
+          type: array
+          items:
+            type: object
+            properties:
+              COMPANY_GUID:
+                type: string
+              NAME:
+                type: string
+              COMPANY_CODE:
+                type: string
+              IS_ACTIVE:
+                type: boolean
+              
+    CompanyProfileUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        slug:
+          type: string
+        registrant_name:
+          type: string
+        institution:
+          type: string
+        phone:
+          type: string
+        image:
+          type: string
+          format: binary
+    UserList:
+      type: object
+      properties:
+        PHONE_NUMBER:
+          type: string
+        NAME:
+          type: string
+        EMAIL:
+          type: string
+        POSITION:
+          type: string
+        ID_CARD:
+          type: string
+        COMPANY:
+          type: string
+        IMAGE:
+          type: string
+        UNIT:
+          type: string
+        GUID:
+          type: string
+        IDENTITY_CARD_IMAGE:
+          type: string
+        FAMILY_CARD_IMAGE:
+          type: string
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+          format: password
+        position:
+          type: string
+        id_card:
+          type: string
+        company:
+          type: string
+        unit:
+          type: string
+        phone_number:
+          type: string
+    AddAnnouncement:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        role:
+          type: string
+    ReportUpdateStatus:
+      type: object
+      properties:
+        report_status:
+          type: string
+paths:
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: User login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLogin"
+      responses:
+        200:
+          description: Login success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserLoginResponse"
+        401:
+          description: Login failed. Either because the email or the password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+  /users/register:
+    post:
+      tags:
+        - Users
+      summary: User register
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/UserRegister"
+      responses:
+        200:
+          description: Register success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        422:
+          description: There are two possible messages. You can produce the `No company with that code` error with wrong company code (in the `company` field) and `E-mail already registered` error with registered email
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnprocessableEntityResponse"
+  /users/profile/update:
+    patch:
+      tags:
+        - Users
+      summary: Update user's profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileUpdate"
+      responses:
+        200:
+          description: Profile update success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfileUpdateResponse"
+  /users/change-password:
+    patch:
+      tags:
+        - Users
+      summary: Change user's password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserPasswordChange"
+      responses:
+        200:
+          description: Password change success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        401:
+          description: There are two possible messages. You can produce the `Your new password and confirmation password doesn't match` error with mismatching the new password and new confirmation password and `Your current password does not match` error with false current password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+  /users/reset-password:
+    post:
+      tags:
+        - Users
+      summary: Allow user to reset their password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserResetPassword"
+      responses:
+        200:
+          description: Reset password success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /users/bind-google:
+    post:
+      tags:
+        - Users
+      summary: Bind user's Google account to existing account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BindGoogleAccount"
+      responses:
+        200:
+          description: Google account binded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /users/google-sign-in:
+    post:
+      tags:
+        - Users
+      summary: Sign in using Google account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoogleSignIn"
+      responses:
+        200:
+          description: Log in using Google account successs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserLoginResponse"
+  /users/areas/{type}:
+    get:
+      tags:
+        - Areas
+      summary: Get Companies by users
+      parameters:
+        - in: path
+          name: type
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get list of area by users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListAreaResponse"
+  /report/create:
+    post:
+      tags:
+        - Reports
+      summary: Create user's report
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/ReportCreate"
+      responses:
+        200:
+          description: Create report success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /report/{companyGuid}/{personGuid}/{page}:
+    get:
+      tags:
+        - Reports
+      summary: Get a person's report
+      parameters:
+        - in: path
+          name: companyGuid
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: personGuid
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: page
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: Get a person's report success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonReportResponse"
+  /version:
+    get:
+      tags:
+        - Version
+      summary: Get application's current version
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get version success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VersionResponse"
+  /unit:
+    post:
+      tags:
+        - Units
+      summary: Create Unit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUnits"
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /unit/getCompanyCode/{companyCode}:
+    get:
+      tags:
+        - Units
+      summary: Get Company Code
+      parameters:
+        - in: path
+          name: companyCode
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  
+  /admin/registration:
+    post:
+      tags:
+        - Admin Authentication
+      summary: Admin Register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminRegistration"
+      responses:
+        200:
+          description: Login success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /admin/login:
+    post:
+      tags:
+        - Admin Authentication
+      summary: Admin Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminLogin"
+      responses:
+        200:
+          description: Login success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminLoginResponse"
+        401:
+          description: Login failed. Either because the email or the password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+  /admin/areas:
+    get:
+      tags:
+        - Admin Properties
+      summary: Get list of area that relies on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `supervisor` role (even though other than `supervisor` still can access this (will return null value, of course) but please keep in mind to access this endpoint wisely).
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Get area success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListAreaResponse"
+  /admin/companies:
+    get:
+      tags:
+        - Admin Properties
+      summary: Get list of companies that relies on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `partial-supervisor` role (even though other than `partial-supervisor` still can access this (will return null value, of course) but please keep in mind to access this endpoint wisely).
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Get companies success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListCompaniesResponse"
+  /admin/companies/{area}/{district}:
+    get:
+      tags:
+        - Admin Properties
+      summary: Get list of companies that relies on the authenticated user with some additional parameters
+      description: Please note that this endpoint is only for an admin that has `supervisor` role (even though other than `supervisor` still can access this (will return null value, of course) but please keep in mind to access this endpoint wisely).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: area
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: district
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get companies success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListCompaniesResponse"
+  /admin/units:
+    get:
+      tags:
+        - Admin Properties
+      summary: Get list of units of a company that relise on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `company` role (even though other than `company` still can access this (will return null value, of course) but please keep in mind to access this endpoint wisely).
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Get units success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListUnitsResponse"
+  /admin/units/{companyGuid}:
+    get:
+      tags:
+        - Admin Properties
+      summary: Get list of units of the supplied company
+      description: Please note that this endpoint is only for an admin that has `partial-supervisor` and `supervisor` role (even though user with `partial-supervisor` and `supervisor`  role still can access this (if the client knows the company GUID), but please keep in mind to access this endpoint wisely).
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: companyGuid
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get units success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListUnitsResponse"
+  /admin/profile/information/update:
+    put:
+      tags:
+        - Admin Properties
+      summary: Update profile information on the authenticated user
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminProfileUpdate"
+      responses:
+        200:
+          description: Profile update success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /admin/profile/information:
+    get:
+      tags:
+        - Admin Properties
+      summary: Get profile information on the authenticated user
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Get profile information success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfileInformationResponse"
+  /admin/report/company:
+    get:
+      tags:
+        - Admin Report
+      summary: Get list of reports that relies on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `company` role (even though other than `company` still can access this (will return null value, of course) but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: minified
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: total_attendance
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: report_type
+          schema:
+            type: string
+        - in: query
+          name: group_report_type
+          schema:
+            type: string
+            enum: [task, general]
+        - in: query
+          name: role
+          schema:
+            type: string
+      responses:
+        200:
+          description: Get reports success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListReportsResponse"
+  /admin/report/company/{unit}:
+    get:
+      tags:
+        - Admin Report
+      summary: Get list of reports that relies on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `company` role (even though other than `company` still can access this (will return null value, of course) but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: minified
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: total_attendance
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+        - in: path
+          name: unit
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: report_type
+          schema:
+            type: string
+        - in: query
+          name: group_report_type
+          schema:
+            type: string
+            enum: [task, general]
+        - in: query
+          name: role
+          schema:
+            type: string
+      responses:
+        200:
+          description: Get reports success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListReportsResponse"
+  /admin/report/hierarchical:
+    get:
+      tags:
+        - Admin Report
+      summary: Get list of reports that relies on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `supervisor` role (even though other than `supervisor` still can access this (will return null value, of course) but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: minified
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: total_attendance
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: report_type
+          schema:
+            type: string
+        - in: query
+          name: group_report_type
+          schema:
+            type: string
+            enum: [task, general]
+        - in: query
+          name: role
+          schema:
+            type: string
+      responses:
+        200:
+          description: Get reports success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListReportsResponse"
+  /admin/report/hierarchical/{area}:
+    get:
+      tags:
+        - Admin Report
+      summary: Get list of reports that relies on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `supervisor` role (even though other than `supervisor` still can access this (will return null value, of course) but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: minified
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: total_attendance
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: report_type
+          schema:
+            type: string
+        - in: query
+          name: group_report_type
+          schema:
+            type: string
+            enum: [task, general]
+        - in: query
+          name: role
+          schema:
+            type: string
+        - in: path
+          name: area
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get reports success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListReportsResponse"
+  /admin/report/hierarchical/{area}/{district}:
+    get:
+      tags:
+        - Admin Report
+      summary: Get list of reports that relies on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `supervisor` role (even though other than `supervisor` still can access this (will return null value, of course) but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: minified
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: total_attendance
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: report_type
+          schema:
+            type: string
+        - in: query
+          name: group_report_type
+          schema:
+            type: string
+            enum: [task, general]
+        - in: query
+          name: role
+          schema:
+            type: string
+        - in: path
+          name: area
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: district
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get reports success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListReportsResponse"
+  /admin/report/hierarchical/{area}/{district}/{company}:
+    get:
+      tags:
+        - Admin Report
+      summary: Get list of reports that relies on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `supervisor` role (even though other than `supervisor` still can access this (will return null value, of course) but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: minified
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: total_attendance
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: report_type
+          schema:
+            type: string
+        - in: query
+          name: group_report_type
+          schema:
+            type: string
+            enum: [task, general]
+        - in: query
+          name: role
+          schema:
+            type: string
+        - in: path
+          name: area
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: district
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: company
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get reports success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListReportsResponse"
+  /admin/report/hierarchical/{area}/{district}/{company}/{unit}:
+    get:
+      tags:
+        - Admin Report
+      summary: Get list of reports that relies on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `supervisor` role (even though other than `supervisor` still can access this (will return null value, of course) but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: minified
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: total_attendance
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: report_type
+          schema:
+            type: string
+        - in: query
+          name: group_report_type
+          schema:
+            type: string
+            enum: [task, general]
+        - in: query
+          name: role
+          schema:
+            type: string
+        - in: path
+          name: area
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: district
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: company
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: unit
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get reports success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListReportsResponse"
+  /admin/report/supervisor/{company}:
+    get:
+      tags:
+        - Admin Report
+      summary: Get list of reports that relies on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `partial-supervisor` role (even though other than `partial-supervisor` still can access this but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: minified
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: total_attendance
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: report_type
+          schema:
+            type: string
+        - in: query
+          name: group_report_type
+          schema:
+            type: string
+            enum: [task, general]
+        - in: query
+          name: role
+          schema:
+            type: string
+        - in: path
+          name: company
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get reports success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListReportsResponse"
+  /admin/report/supervisor/{company}/{unit}:
+    get:
+      tags:
+        - Admin Report
+      summary: Get list of reports that relies on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `partial-supervisor` role (even though other than `partial-supervisor` still can access this but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: company
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: unit
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get reports success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListReportsResponse"
+  /admin/report/hierarchical/{company}/{unit}:
+    get:
+      tags:
+        - Admin Report
+      summary: Get list of reports that relies on the authenticated user
+      description: Please note that this endpoint is only for an admin that has `partial-supervisor` role (even though other than `partial-supervisor` still can access this but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: minified
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: total_attendance
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: report_type
+          schema:
+            type: string
+        - in: query
+          name: group_report_type
+          schema:
+            type: string
+            enum: [task, general]
+        - in: query
+          name: role
+          schema:
+            type: string
+        - in: path
+          name: company
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: unit
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get reports success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListReportsResponse"
+  /admin/report/export/hierarchical/{area}/{district}/{company}/{unit}:
+    get:
+      tags:
+        - Admin Report
+      summary: Get exported report filename
+      description: Please note that this endpoint is only for an admin that has `supervisor` role (even though other than `supervisor` still can access this but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: area
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: district
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: company
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: unit
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Export report success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportReportResponse"
+  /admin/report/export/company/{unit}:
+    get:
+      tags:
+        - Admin Report
+      summary: Get exported report filename
+      description: Please note that this endpoint is only for an admin that has `company` role (even though other than `company` still can access this but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: unit
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Export report success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportReportResponse"
+  /admin/report/export/supervisor/{company}/{unit}:
+    get:
+      tags:
+        - Admin Report
+      summary: Get exported report filename
+      description: Please note that this endpoint is only for an admin that has `partial-supervisor` role (even though other than `partial-supervisor` still can access this but please keep in mind to access this endpoint wisely). The returned value may vary depends on supplied parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: company
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: unit
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Export report success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportReportResponse"
+  /admin/report/by-id/{reportId}:
+    get:
+      tags:
+        - Admin Report
+      summary: Get report by its ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: reportId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get report success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportByIdResponse"
+                
+  /companies/create:
+    post:
+      tags:
+        - Companies
+      summary: create new companies
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCompany"
+      responses:
+        200:
+          description: Create company
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /companies/profile/create:
+    post:
+      tags:
+        - Companies
+      summary: create new companies profile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CompanyProfileUpdate"
+      responses:
+        200:
+          description: Create company
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  
+  /company/{companyCode}/units:
+    get:
+      tags:
+        - Companies
+      summary: Get list of units
+      parameters:
+        - in: path
+          name: companyCode
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get units success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListUnitsResponse"
+  /company/{companyGuid}/profile:
+    get:
+      tags:
+        - Companies
+      summary: Get profile of a company
+      parameters:
+        - in: path
+          name: companyGuid
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get company profile success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyProfileResponse"
+  /companies:
+    get:
+      tags:
+        - Companies
+      summary: Get list of companies based by app-type
+      parameters:
+        - in: query
+          name: app-type
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get companies success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListCompaniesResponse"
+  /companies/{companyGuid}:
+    get:
+      tags:
+        - Companies
+      summary: Get companies based by guid
+      parameters:
+        - in: path
+          name: companyGuid
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get companies success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetCompanyByGuidResponse"
+  /admin/unit/migrate:
+    get:
+      tags:
+        - Admin Properties
+      summary: Migrate old units
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Migrate units success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /admin/report-types:
+    get:
+      tags:
+        - Admin Report
+      summary: Get available report types
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: role
+          schema:
+            type: string
+        - in: query
+          name: type
+          schema:
+            type: string
+      responses:
+        200:
+          description: Get report types success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportTypesResponse"
+                /admin/report-types:
+    post:
+      tags:
+        - Admin Report
+      summary: create new report types
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddReportType"
+      
+      responses:
+        200:
+          description: Get report types success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  
+  /admin/report/status/by-id/{reportId}/update:
+    put:
+      tags:
+        - Admin Report
+      summary: Update report by reportId
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: reportId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportUpdateStatus"
+      responses:
+        200:
+          description: Get report types success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /admin/task:
+    post:
+      tags:
+        - Admin Task
+      summary: Add new Task
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddTask"
+      responses:
+        200:
+          description: Task added successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /admin/tasks:
+    get:
+      tags:
+        - Admin Task
+      summary: Get list of tasks
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Tasks retrieved successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TasksResponse"
+  /admin/task/{id}:
+    get:
+      tags:
+        - Admin Task
+      summary: Get single item of tasks
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          description: Task GUID
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Task retrieved successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+  /admin/task/{id}/update:
+    put:
+      tags:
+        - Admin Task
+      summary: Update a task
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          description: Task GUID
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddTask"
+      responses:
+        200:
+          description: Task updated successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /admin/task/{id}/delete:
+    delete:
+      tags:
+        - Admin Task
+      summary: Delete a task
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          description: Task GUID
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Task deleted successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /tasks/{id}:
+    get:
+      tags:
+        - Task
+      summary: Get user tasks based by its GUID
+      parameters:
+        - in: path
+          name: id
+          description: User GUID
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Tasks retrieved successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TasksResponse"
+  /admin/users/{company}:
+    get:
+      tags:
+        - Admin Properties
+      summary: Get user list
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: company
+          description: Company GUID
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Users retrieved successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsersResponse"
+  /admin/users/{company}/{unit}:
+    get:
+      tags:
+        - Admin Properties
+      summary: Get user list
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: company
+          description: Company GUID
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: unit
+          description: Unit name
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Users retrieved successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsersResponse"
+  /admin/exported-report:
+    get:
+      tags:
+        - Admin Exported Report
+      summary: Get exported report list
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: date_start
+          description: Date start of the exported report
+          schema:
+            type: string
+        - in: query
+          name: date_end
+          description: Date end of the exported report
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+      responses:
+        200:
+          description: Get exported report success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportedReportResponse"
+  /admin/exported-report/{unit}:
+    get:
+      tags:
+        - Admin Exported Report
+      summary: Get exported report list
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: unit
+          description: Unit name
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: date_start
+          description: Date start of the exported report
+          schema:
+            type: string
+        - in: query
+          name: date_end
+          description: Date end of the exported report
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+      responses:
+        200:
+          description: Get exported report success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportedReportResponse"
+  /admin/map/boundary:
+    post:
+      tags:
+        - Admin Map
+      summary: Add map boundaries
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MapBoundaries"
+      responses:
+        200:
+          description: Add map boundaries
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /admin/map/boundaries:
+    get:
+      tags:
+        - Admin Map
+      summary: Get map boundaries
+      security:
+        - bearerAuth: []
+      parameters: []
+      responses:
+        200:
+          description: Get map boundaries
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MapBoundariesResponse"
+  /admin/map/boundaries/{id}/delete:
+    delete:
+      tags:
+        - Admin Map
+      summary: Delete map boundaries
+      security:
+        - bearerAuth: []
+      parameters: 
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Delete map boundaries
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /report-types:
+    get:
+      tags:
+        - Report type
+      parameters:
+        - in: query
+          name: app_type
+          schema:
+            type: string
+        - in: query
+          name: role
+          schema:
+            type: string
+        - in: query
+          name: type
+          schema:
+            type: string
+      responses:
+        200:
+          description: Get report types
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportTypesResponse"
+  /admin/user:
+    get:
+      tags:
+        - Admin Users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Get user list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserListResponse"
+    post:
+      tags:
+        - Admin Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/UserRegister"
+      responses:
+        200:
+          description: Register success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        422:
+          description: There are two possible messages. You can produce the `No company with that code` error with wrong company code (in the `company` field) and `E-mail already registered` error with registered email
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnprocessableEntityResponse"
+  /admin/user/{id}/find:
+    get:
+      tags:
+        - Admin Users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Get user list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+  /admin/user/{id}/update:
+    put:
+      tags:
+        - Admin Users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        200:
+          description: Update user success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /admin/user/{id}/delete:
+    delete:
+      tags:
+        - Admin Users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Delete user success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /admin/company/profile/update:
+    put:
+      tags:
+        - Admin Properties
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CompanyProfileUpdate"
+      responses:
+        200:
+          description: Update company profile success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /admin/company/profile:
+    get:
+      tags:
+        - Admin Properties
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Get company profile success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyProfileResponse"
+  /admin/announcement:
+    post:
+      tags:
+        - Admin Announcement
+      summary: Add new announcement
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddAnnouncement"
+      responses:
+        200:
+          description: Announcement added successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+    get:
+      tags:
+        - Admin Announcement
+      summary: Get list of announcements
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Announcements retrieved successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnnouncementsResponse"
+  /admin/announcement/{id}:
+    get:
+      tags:
+        - Admin Announcement
+      summary: Get single item of announcements
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          description: Announcement GUID
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Announcement retrieved successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnnouncementResponse"
+  /admin/announcement/{id}/update:
+    put:
+      tags:
+        - Admin Announcement
+      summary: Update a announcement
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          description: Announcement GUID
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddAnnouncement"
+      responses:
+        200:
+          description: Announcement updated successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /admin/announcement/{id}/delete:
+    delete:
+      tags:
+        - Admin Announcement
+      summary: Delete a announcement
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          description: Announcement GUID
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Announcement deleted successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /announcement/{company_guid}/{role}:
+    get:
+      tags:
+        - Announcement
+      summary: Get single item of announcements
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: company_guid
+          description: Company GUID
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: role
+          description: User role
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Announcement retrieved successfuly
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnnouncementResponse"
